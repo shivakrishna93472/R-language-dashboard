@@ -1,0 +1,90 @@
+---
+title: "USED CARS ANALYSIS DASHBOARD"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(wordcloud)
+library(ggplot2)
+library(plotly)
+
+```
+
+Column {.tabset .tabset-fade .tabset-fade .tabset-fade data-width=650}
+-----------------------------------------------------------------------
+
+### Bar Graph ####
+
+```{r}
+a <- ggplot(cars, aes(x = model)) + 
+     geom_bar(fill="maroon") +
+     labs(title = "Car Model wise Count", x = "Car Model", y = "Count", fill = " Model")+
+     theme(panel.background = element_rect(fill = "lightgreen")) 
+b  <- ggplotly(a, tooltip = c("y"))
+b
+
+
+```
+
+### ScatterPlot #####
+```{r}
+x <- ggplot(cars, aes(x=model, y=price, color=as.factor(year))) +
+     geom_point() +
+     labs(title="Car prices by model and year",
+       x="Car model",
+       y="Price (USD)",
+       color="Year") +
+     scale_color_discrete(name = "Year",
+                       labels = c("2018", "2019", "2020", "2021"),
+                       breaks = c(2018, 2019, 2020, 2021))+
+     theme(panel.background = element_rect(fill = "lightpink"))
+y <- ggplotly(x, tooltip = c("y"))
+y
+
+```
+
+### Box Plot  ###
+```{r}
+
+p <- ggplot(cars, aes(x = year, y = torque, fill = as.factor(year))) + 
+  geom_boxplot() +
+  labs(title="Torque by Year", x="Year", y="Torque") +
+  theme(panel.background = element_rect(fill = "lightblue"))
+q <- ggplotly(p, tooltip = c("y"))
+q
+
+```
+
+
+```{r}
+
+
+```
+
+Column {data-width=350}
+-----------------------------------------------------------------------
+
+### Chart B
+
+```{r}
+ ggplot(cars, aes(x="", y=engine_type, fill=model)) +
+  geom_bar(stat="identity", width=1) +
+  coord_polar("y", start=1)+
+labs(title="Car Engine Types by Model", y="Engine Type", fill="Car Model")
+
+```
+Column {data-width=350}
+-----------------------------------------------------------------------
+
+### Chart C
+
+```{r}
+ wordcloud(words=cars$brand, freq = cars$miles,scale=c(4.5,0.25),
+     max.words=30, colors=brewer.pal(8,"Dark2"))
+
+```
+
